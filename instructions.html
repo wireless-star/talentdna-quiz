@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent DNA — Instructions</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="instructions-container">
+    <div class="instructions-header">
+        <h1>Before You Start Your<br>DNA Motivator DISC Assessment</h1>
+        <div class="language-selector" style="margin-top:15px;">
+            <button class="lang-btn active" onclick="setLang('en')">🇬🇧 English</button>
+            <button class="lang-btn" onclick="setLang('zh-CN')">🇨🇳 中文</button>
+            <button class="lang-btn" onclick="setLang('ms')">🇲🇾 Bahasa</button>
+        </div>
+    </div>
+
+    <div class="instructions-content" id="instructionsContent">
+        <p style="color:#e6edf3;font-size:1.05rem;margin-bottom:25px;">
+            To get the most accurate result, please follow these quick guidelines:
+        </p>
+        <ol class="guidelines">
+            <li><strong>①</strong> Find a quiet place with no distractions.</li>
+            <li><strong>②</strong> Complete the test in one sitting — it takes about <strong>15 minutes</strong>.</li>
+            <li><strong>③</strong> Once you begin, you must finish; it can't be paused.</li>
+            <li><strong>④</strong> Answer with your <strong>first, honest instinct</strong> — who you are today, not who you wish to be.</li>
+            <li><strong>⑤</strong> Be true to yourself. Authentic answers = an accurate report you can use to grow.</li>
+        </ol>
+        <div class="motivation-text">
+            You've got this — take a breath, trust your gut, and let's discover your Talent DNA. 🧬
+        </div>
+    </div>
+
+    <div class="scroll-indicator" id="scrollIndicator">👆 Please scroll through all instructions above</div>
+
+    <div class="checkbox-container disabled" id="checkboxContainer">
+        <input type="checkbox" id="confirmCheckbox" disabled>
+        <label for="confirmCheckbox">
+            I have read and understood all the instructions above. I am ready to begin the assessment.
+        </label>
+    </div>
+
+    <button class="proceed-button" id="proceedButton" disabled>
+        Proceed to Assessment
+    </button>
+</div>
+
+<script>
+    const content      = document.getElementById('instructionsContent');
+    const indicator    = document.getElementById('scrollIndicator');
+    const checkbox     = document.getElementById('confirmCheckbox');
+    const checkboxWrap = document.getElementById('checkboxContainer');
+    const button       = document.getElementById('proceedButton');
+    let scrolledToBottom = false;
+
+    function enableCheckbox() {
+        if (scrolledToBottom) return;
+        scrolledToBottom = true;
+        indicator.classList.add('hidden');
+        checkbox.disabled = false;
+        checkboxWrap.classList.remove('disabled');
+    }
+
+    content.addEventListener('scroll', () => {
+        if (content.scrollTop + content.clientHeight >= content.scrollHeight - 5) enableCheckbox();
+    });
+
+    // If content is short enough to not need scrolling
+    window.addEventListener('load', () => {
+        if (content.scrollHeight <= content.clientHeight) enableCheckbox();
+    });
+
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) checkboxWrap.classList.add('checked');
+        else checkboxWrap.classList.remove('checked');
+        button.disabled = !checkbox.checked;
+    });
+
+    checkboxWrap.addEventListener('click', (e) => {
+        if (!scrolledToBottom) { e.preventDefault(); e.stopPropagation(); }
+    });
+
+    button.addEventListener('click', () => {
+        if (!button.disabled) {
+            // Pass selected language to quiz page
+            const lang = window.__instrLang || 'en';
+            window.location.href = `index.html?lang=${lang}`;
+        }
+    });
+
+    // Language switcher for instructions page
+    window.__instrLang = 'en';
+    function setLang(lang) {
+        window.__instrLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.trim().includes(lang === 'en' ? 'English' : lang === 'zh-CN' ? '中文' : 'Bahasa')));
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Motivator DISC Personality Test Assessment</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+
+    <!-- Company branding — change "YOUR NAME" to your own -->
+    <div class="company-header">
+        <div class="company-name notranslate">YOUR NAME</div>
+    </div>
+
+    <div class="header">
+        <h1 id="quiz-title">DNA Motivator DISC Personality Test Assessment</h1>
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="zh-CN">🇨🇳 中文</button>
+            <button class="lang-btn" data-lang="ms">🇲🇾 Bahasa</button>
+        </div>
+        <p id="quiz-subtitle">Discover your personality traits and motivational drivers</p>
+    </div>
+
+    <form id="assessmentForm">
+
+        <!-- Part 1: DISC -->
+        <div class="section">
+            <h2 id="part1-heading">Part 1: DISC Assessment</h2>
+            <div class="instructions" id="instructions-disc">
+                <strong>Instructions:</strong>
+                For each group of words, rank them by clicking in order from "Most like you" (1&nbsp;-&nbsp;Green)
+                to "Least like you" (4&nbsp;-&nbsp;Red).
+                <br><span style="font-size:0.9em;margin-top:8px;display:block;">
+                    <span style="color:#10b981;">■</span> 1 &nbsp;
+                    <span style="color:#facc15;">■</span> 2 &nbsp;
+                    <span style="color:#fb923c;">■</span> 3 &nbsp;
+                    <span style="color:#ef4444;">■</span> 4
+                </span>
+            </div>
+            <div class="progress"><div class="progress-bar" id="discProgress"></div></div>
+            <div id="discQuestions"></div>
+        </div>
+
+        <!-- Part 2: Motivators -->
+        <div class="section">
+            <h2 id="part2-heading">Part 2: Motivators Assessment</h2>
+            <div class="instructions" id="instructions-mot">
+                <strong>Instructions:</strong>
+                For each group of statements, rank them from 1 (most important to you) to 6 (least important to you).
+            </div>
+            <div class="progress"><div class="progress-bar" id="motivatorProgress"></div></div>
+            <div id="motivatorQuestions"></div>
+        </div>
+
+        <!-- User Info -->
+        <div class="section">
+            <h2 id="info-heading">Your Information</h2>
+            <div class="instructions">
+                <strong id="required-label">Required:</strong>
+                <span id="required-info">Please enter your full name and phone number before submitting your assessment.</span>
+            </div>
+
+            <div class="form-group">
+                <label id="label-name" for="userName">Full Name *</label>
+                <input type="text" id="userName" name="userName" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label id="label-phone">Country Code &amp; Phone Number *</label>
+                <div class="phone-row">
+                    <select id="userCountryCode" name="userCountryCode" required>
+                        <option value="">Select code</option>
+                        <option value="+60">🇲🇾 +60 (Malaysia)</option>
+                        <option value="+65">🇸🇬 +65 (Singapore)</option>
+                        <option value="+1">🇺🇸 +1 (US/CA)</option>
+                        <option value="+44">🇬🇧 +44 (UK)</option>
+                        <option value="+61">🇦🇺 +61 (Australia)</option>
+                        <option value="+62">🇮🇩 +62 (Indonesia)</option>
+                        <option value="+63">🇵🇭 +63 (Philippines)</option>
+                        <option value="+66">🇹🇭 +66 (Thailand)</option>
+                        <option value="+84">🇻🇳 +84 (Vietnam)</option>
+                        <option value="+86">🇨🇳 +86 (China)</option>
+                        <option value="+91">🇮🇳 +91 (India)</option>
+                        <option value="+81">🇯🇵 +81 (Japan)</option>
+                        <option value="+82">🇰🇷 +82 (South Korea)</option>
+                    </select>
+                    <input type="tel" id="userPhone" name="userPhone" placeholder="Enter your phone number" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Language -->
+        <div class="section">
+            <h2 id="lang-heading">Report Language</h2>
+            <div class="form-group">
+                <select id="reportLanguage" name="reportLanguage">
+                    <option value="en">English</option>
+                    <option value="zh-CN">Chinese (Simplified)</option>
+                    <option value="ms">Bahasa Malaysia</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="submit-section">
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                Complete Assessment
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<!-- Scripts — ORDER MATTERS -->
+<script src="js/assessment-data.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/translations-questions.js"></script>
+<script src="js/scoring.js"></script>
+<script src="js/report-translations.js"></script>
+<script src="js/report.js"></script>
+<script src="js/app.js"></script>
+<script>
+    // Pick up ?lang= from instructions page
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    if (urlLang && window.TRANSLATIONS[urlLang]) {
+        window.__appLang = urlLang;
+        // Activate the matching language button
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === urlLang);
+        });
+    }
+</script>
+</body>
+</html>
