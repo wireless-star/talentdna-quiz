@@ -98,14 +98,23 @@
 </div>
 
 <script>
-    // ── CHANGE YOUR ACCESS CODE HERE ─────────────────────────────────
-    const ACCESS_CODE = "DNA2025";
+    // ── ACCESS CODE HASH (SHA-256) ────────────────────────────────────
+    // To change the access code:
+    // 1. Run this in browser console: hashInput("YOURNEWCODE").then(console.log)
+    // 2. Replace the hash below with the result
+    const ACCESS_HASH = "b1250e3f10cb7ead7da6bfbc30a5a9339a2d28fafd7f1644f07c6d520476f9fa";
     // ─────────────────────────────────────────────────────────────────
 
+    async function hashInput(str) {
+        const encoded = new TextEncoder().encode(str.toUpperCase());
+        const buf     = await crypto.subtle.digest('SHA-256', encoded);
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+
     const ui = {
-        en: { title:"Talent DNA Assessment", subtitle:"Please enter your access code to begin.", btn:"→ Enter", placeholder:"Enter code", error:"Incorrect code. Please try again." },
-        "zh-CN": { title:"才能 DNA 测评", subtitle:"请输入访问码以开始测试。", btn:"→ 进入", placeholder:"请输入访问码", error:"访问码不正确，请重试。" },
-        ms: { title:"Penilaian DNA Bakat", subtitle:"Sila masukkan kod akses anda untuk memulakan.", btn:"→ Masuk", placeholder:"Masukkan kod", error:"Kod tidak betul. Sila cuba lagi." }
+        en:      { title:"Talent DNA Assessment",   subtitle:"Please enter your access code to begin.", btn:"→ Enter",  placeholder:"Enter code",        error:"Incorrect code. Please try again." },
+        "zh-CN": { title:"才能 DNA 测评",            subtitle:"请输入访问码以开始测试。",                btn:"→ 进入",  placeholder:"请输入访问码",        error:"访问码不正确，请重试。" },
+        ms:      { title:"Penilaian DNA Bakat",      subtitle:"Sila masukkan kod akses anda untuk memulakan.", btn:"→ Masuk", placeholder:"Masukkan kod", error:"Kod tidak betul. Sila cuba lagi." }
     };
     let lang = 'en';
 
@@ -115,16 +124,17 @@
             b.classList.toggle('active', b.textContent.includes(l==='en'?'English':l==='zh-CN'?'中文':'Bahasa'))
         );
         const d = ui[l];
-        document.getElementById('etitle').textContent      = d.title;
-        document.getElementById('esubtitle').textContent   = d.subtitle;
-        document.getElementById('enterBtn').textContent    = d.btn;
-        document.getElementById('codeInput').placeholder   = d.placeholder;
-        document.getElementById('errorMsg').textContent    = '';
+        document.getElementById('etitle').textContent    = d.title;
+        document.getElementById('esubtitle').textContent = d.subtitle;
+        document.getElementById('enterBtn').textContent  = d.btn;
+        document.getElementById('codeInput').placeholder = d.placeholder;
+        document.getElementById('errorMsg').textContent  = '';
     }
 
-    function checkCode() {
-        const val = document.getElementById('codeInput').value.trim().toUpperCase();
-        if (val === ACCESS_CODE.toUpperCase()) {
+    async function checkCode() {
+        const val   = document.getElementById('codeInput').value.trim();
+        const hashed = await hashInput(val);
+        if (hashed === ACCESS_HASH) {
             sessionStorage.setItem('dna_access', '1');
             window.location.href = 'instructions.html?lang=' + lang;
         } else {
