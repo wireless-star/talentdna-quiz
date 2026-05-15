@@ -148,6 +148,8 @@ function generateReport(data, discRaw, motRaw) {
     </div>
   </div>
 
+  ${window.generateDeepSummary ? window.generateDeepSummary(discRaw, motRaw, name, lang) : ''}
+
   <div class="report-actions">
     <button class="btn-print" onclick="window.print()">${ui.printBtn}</button>
     <button class="btn-retake" onclick="window.location.href='index.html'">${ui.retakeBtn}</button>
@@ -157,6 +159,7 @@ function generateReport(data, discRaw, motRaw) {
 
 <script src="js/scoring.js"><\/script>
 <script src="js/report-translations.js"><\/script>
+<script src="js/deep-summary.js"><\/script>
 <script src="js/report.js"><\/script>
 <script>
   var __savedResult = JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify({ data, discRaw, motRaw }))}'));
