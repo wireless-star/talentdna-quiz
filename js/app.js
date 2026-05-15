@@ -341,12 +341,8 @@ function saveToSheet(data, discRaw, motRaw) {
         dnaCombo:         `${discSorted[0]}-${motSorted[0]}`,
         language:         data.language || 'en'
     };
-    fetch(COLLECTOR_URL, {
-        method:  'POST',
-        mode:    'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body:    new URLSearchParams(payload).toString()
-    }).catch(() => {}); // fire-and-forget, never block the report
+    // Image-pixel trick: zero CORS issues, fire-and-forget
+    new Image().src = COLLECTOR_URL + '?' + new URLSearchParams(payload).toString();
 }
 
 function handleSubmit(e) {
