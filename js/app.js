@@ -322,6 +322,31 @@ function scrollToFirstIncomplete() {
 }
 
 // ── Form Submit → Generate Report ────────────────────────────────────────────
+const COLLECTOR_URL = 'https://script.google.com/macros/s/AKfycbzJNtCcGr1JHxdVPMguV9flmbYN3sdx0WoXDw_0ljR4LPXwO0XnDhZhmbDvPQ6TA0vIFQ/exec';
+
+function saveToSheet(data, discRaw, motRaw) {
+    const discSorted = sortedKeys(discRaw);
+    const motSorted  = sortedKeys(motRaw);
+    const payload = {
+        name:             data.userName,
+        phone:            (data.userCountryCode || '') + (data.userPhone || ''),
+        discPrimary:      discSorted[0] || '',
+        discSecondary:    discSorted[1] || '',
+        scoreD:           discRaw.D || 0,
+        scoreI:           discRaw.I || 0,
+        scoreS:           discRaw.S || 0,
+        scoreC:           discRaw.C || 0,
+        topMotivator:     motSorted[0] || '',
+        secondMotivator:  motSorted[1] || '',
+        dnaCombo:         `${discSorted[0]}-${motSorted[0]}`,
+        language:         data.language || 'en'
+    };
+    fetch(COLLECTOR_URL, {
+        method: 'POST',
+        body:   JSON.stringify(payload)
+    }).catch(() => {}); // fire-and-forget, never block the report
+}
+
 function handleSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
@@ -330,13 +355,15 @@ function handleSubmit(e) {
 
     setTimeout(() => {
         try {
-            // Use reportLanguage dropdown if set, else fall back to UI language
             const reportLang = document.getElementById('reportLanguage')?.value || assessmentData.language || 'en';
             assessmentData.language = reportLang;
 
             const discRaw = calculateDISC(assessmentData.set1);
             const motRaw  = calculateMotivators(assessmentData.set2);
-            const html    = generateReport(assessmentData, discRaw, motRaw);
+
+            saveToSheet(assessmentData, discRaw, motRaw); // save to Google Sheets
+
+            const html = generateReport(assessmentData, discRaw, motRaw);
             document.open();
             document.write(html);
             document.close();
