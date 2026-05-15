@@ -48,6 +48,11 @@
 </div>
 
 <script>
+    // Access guard — redirect to enter.html if no valid session
+    if (!sessionStorage.getItem('dna_access')) {
+        window.location.href = 'enter.html';
+    }
+
     const content      = document.getElementById('instructionsContent');
     const indicator    = document.getElementById('scrollIndicator');
     const checkbox     = document.getElementById('confirmCheckbox');

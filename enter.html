@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent DNA — Access</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .enter-container {
+            max-width: 480px;
+            margin: 80px auto;
+            padding: 40px 30px;
+            background: #111827;
+            border-radius: 16px;
+            border: 1px solid #1f2937;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        .enter-logo {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        .enter-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 6px;
+        }
+        .enter-subtitle {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+        }
+        .enter-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #1f2937;
+            color: #f3f4f6;
+            border: 2px solid #374151;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .enter-input:focus { border-color: #60a5fa; }
+        .enter-input.error  { border-color: #ef4444; animation: shake 0.3s; }
+        @keyframes shake {
+            0%,100%{ transform:translateX(0); }
+            25%    { transform:translateX(-8px); }
+            75%    { transform:translateX(8px); }
+        }
+        .enter-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 14px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .enter-btn:hover { background: linear-gradient(135deg, #2563eb, #1d4ed8); transform: translateY(-1px); }
+        .error-msg {
+            margin-top: 12px;
+            color: #ef4444;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+        .lang-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+    </style>
+</head>
+<body>
+<div class="enter-container">
+    <div class="enter-logo">🧬</div>
+    <div class="enter-title" id="etitle">Talent DNA Assessment</div>
+    <div class="lang-row">
+        <button class="lang-btn active" onclick="setLang('en')">🇬🇧 English</button>
+        <button class="lang-btn" onclick="setLang('zh-CN')">🇨🇳 中文</button>
+        <button class="lang-btn" onclick="setLang('ms')">🇲🇾 Bahasa</button>
+    </div>
+    <div class="enter-subtitle" id="esubtitle">Please enter your access code to begin.</div>
+
+    <input class="enter-input" id="codeInput" type="text"
+           placeholder="Enter code" autocomplete="off" spellcheck="false">
+    <button class="enter-btn" id="enterBtn" onclick="checkCode()">→ Enter</button>
+    <div class="error-msg" id="errorMsg"></div>
+</div>
+
+<script>
+    // ── CHANGE YOUR ACCESS CODE HERE ─────────────────────────────────
+    const ACCESS_CODE = "DNA2025";
+    // ─────────────────────────────────────────────────────────────────
+
+    const ui = {
+        en: { title:"Talent DNA Assessment", subtitle:"Please enter your access code to begin.", btn:"→ Enter", placeholder:"Enter code", error:"Incorrect code. Please try again." },
+        "zh-CN": { title:"才能 DNA 测评", subtitle:"请输入访问码以开始测试。", btn:"→ 进入", placeholder:"请输入访问码", error:"访问码不正确，请重试。" },
+        ms: { title:"Penilaian DNA Bakat", subtitle:"Sila masukkan kod akses anda untuk memulakan.", btn:"→ Masuk", placeholder:"Masukkan kod", error:"Kod tidak betul. Sila cuba lagi." }
+    };
+    let lang = 'en';
+
+    function setLang(l) {
+        lang = l;
+        document.querySelectorAll('.lang-btn').forEach(b =>
+            b.classList.toggle('active', b.textContent.includes(l==='en'?'English':l==='zh-CN'?'中文':'Bahasa'))
+        );
+        const d = ui[l];
+        document.getElementById('etitle').textContent      = d.title;
+        document.getElementById('esubtitle').textContent   = d.subtitle;
+        document.getElementById('enterBtn').textContent    = d.btn;
+        document.getElementById('codeInput').placeholder   = d.placeholder;
+        document.getElementById('errorMsg').textContent    = '';
+    }
+
+    function checkCode() {
+        const val = document.getElementById('codeInput').value.trim().toUpperCase();
+        if (val === ACCESS_CODE.toUpperCase()) {
+            sessionStorage.setItem('dna_access', '1');
+            window.location.href = 'instructions.html?lang=' + lang;
+        } else {
+            const input = document.getElementById('codeInput');
+            input.classList.add('error');
+            document.getElementById('errorMsg').textContent = ui[lang].error;
+            setTimeout(() => input.classList.remove('error'), 400);
+        }
+    }
+
+    document.getElementById('codeInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') checkCode();
+    });
+</script>
+</body>
+</html>
